@@ -3,12 +3,20 @@ Alfero's Northwind Project
 
 This project is a demonstration of several technologies
 
+* Entity Framework Code-First
 * ASP.NET WebPages
 * ASP.NET Web API
-* KnockoutJS
+* Knockout
 * T4 Scaffolding
 * Twitter Bootstrap
 * JQuery
+
+Entity Framework
+----------------
+
+Here I wanted to find out if I can use Entity Framework Code First without modifying the database. 
+Evidently, this is very possible for an application of this size. There are some minor hacks I had to employ
+around code-generated unique keys, but I'm sure there is an elegant way to handle those.
 
 ASP.NET Web Pages
 -----------------
@@ -22,6 +30,8 @@ Knockout
 --------
 
 I simply fell in love with the concept, but wasn't sure if I could build a scalable real-world application with it.
+Again, I'm not an expert here, but a little research brought me thus far. What I found interesting was dealing with 
+the Order-OrderDetail relationship.
 
 T4 Scaffolding
 --------------
@@ -37,7 +47,7 @@ However, it became very clear to me that Scaffolding was a better approach:
 Twitter Bootstrap
 -----------------
 
-I now prefer this framework of jQuery UI. Just me.
+I now prefer this framework over jQuery UI. Just me.
 
 jQuery
 ------
@@ -53,7 +63,8 @@ This Project Sucks?
 ===================
 
 Probably so, but all comments are welcome. I had no real incentive to demonstrate any other technology besides the ones listed above.
-I'm pretty sure this can be improved (especially the scaffolding code - it's super ugly, I know).
+I know I don't have any tests in this project, but that wasn't the point. Feel free to add if you're so inclined.
+This is a very rough implementation from a non-expert, so I'm pretty sure this can be improved (especially the scaffolding code - it's super ugly, I know).
 
 Roadmap/Ideas
 =============
