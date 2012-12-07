@@ -71,5 +71,6 @@ Roadmap/Ideas
 
 * Polish up application functionality
 * Polish up scaffolders
+* Add Client-side validation with JQuery.Validate
 * Contribute extensions to the T4 Scaffolding core
 * Create a new WebPages/Knockout Scaffolding nuget package (help?) for scaffolding plain razor pages with Knockout bindings
