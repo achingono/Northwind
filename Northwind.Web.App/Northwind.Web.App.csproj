@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{341E3A49-CC03-4192-9C33-F9877C0164F7}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Northwind.Web.App</RootNamespace>
+    <AssemblyName>Northwind.Web.App</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Northwind.sdf" />
+    <Content Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-responsive.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datepicker.css" />
+    <Content Include="Content\images\glyphicons-halflings-white.png" />
+    <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="LICENSE.txt" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\dateformat.js" />
+    <Content Include="Scripts\jquery-1.8.3-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.8.3.js" />
+    <Content Include="Scripts\jquery-1.8.3.min.js" />
+    <Content Include="Scripts\knockout-2.2.0.debug.js" />
+    <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\knockout.mapping-latest.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\orders.js" />
+    <Content Include="Scripts\pages.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Shared\_Header.cshtml" />
+    <Content Include="Shared\_Layout.cshtml" />
+    <Content Include="Shared\_Modal.cshtml" />
+    <Content Include="Shared\_Pagination.cshtml" />
+    <Content Include="Default.cshtml" />
+    <Content Include="_AppStart.cshtml" />
+    <None Include="CodeTemplates\Scaffolders\Pages\Pages.ps1" />
+    <None Include="CodeTemplates\Scaffolders\Pages\PagesTemplate.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\SharedViews\AddViewTemplate.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\SharedViews\DisplayViewTemplate.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\SharedViews\EditViewTemplate.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\SharedViews\ListViewTemplate.cs.t4" />
+    <None Include="CodeTemplates\Scaffolders\SharedViews\SharedViews.ps1" />
+    <None Include="CodeTemplates\Scaffolders\SharedViews\SharedViewsTemplate.cs.t4" />
+    <Content Include="Shared\Categories\_Add.cshtml" />
+    <Content Include="Shared\Categories\_Edit.cshtml" />
+    <Content Include="Shared\Categories\_List.cshtml" />
+    <Content Include="Shared\Categories\_Display.cshtml" />
+    <Content Include="Shared\Customers\_Add.cshtml" />
+    <Content Include="Shared\Customers\_Edit.cshtml" />
+    <Content Include="Shared\Customers\_List.cshtml" />
+    <Content Include="Shared\Customers\_Display.cshtml" />
+    <Content Include="Shared\Employees\_Add.cshtml" />
+    <Content Include="Shared\Employees\_Edit.cshtml" />
+    <Content Include="Shared\Employees\_Display.cshtml" />
+    <Content Include="Shared\OrderDetails\_Add.cshtml" />
+    <Content Include="Shared\OrderDetails\_Edit.cshtml" />
+    <Content Include="Shared\OrderDetails\_Display.cshtml" />
+    <Content Include="Shared\Orders\_Add.cshtml" />
+    <Content Include="Shared\Orders\_Edit.cshtml" />
+    <Content Include="Shared\Orders\_List.cshtml" />
+    <Content Include="Shared\Orders\_Display.cshtml" />
+    <Content Include="Shared\Products\_Add.cshtml" />
+    <Content Include="Shared\Products\_Edit.cshtml" />
+    <Content Include="Shared\Products\_List.cshtml" />
+    <Content Include="Shared\Products\_Display.cshtml" />
+    <Content Include="Shared\Shippers\_Add.cshtml" />
+    <Content Include="Shared\Shippers\_Edit.cshtml" />
+    <Content Include="Shared\Shippers\_List.cshtml" />
+    <Content Include="Shared\Shippers\_Display.cshtml" />
+    <Content Include="Shared\Suppliers\_Add.cshtml" />
+    <Content Include="Shared\Suppliers\_Edit.cshtml" />
+    <Content Include="Shared\Suppliers\_Display.cshtml" />
+    <Content Include="Pages\Categories.cshtml" />
+    <Content Include="Pages\Customers.cshtml" />
+    <Content Include="Pages\Employees.cshtml" />
+    <Content Include="Pages\Orders.cshtml" />
+    <Content Include="Pages\Products.cshtml" />
+    <Content Include="Pages\Shippers.cshtml" />
+    <Content Include="Pages\Suppliers.cshtml" />
+    <Content Include="Shared\Employees\_List.cshtml" />
+    <Content Include="Shared\Suppliers\_List.cshtml" />
+    <Content Include="Shared\OrderDetails\_List.cshtml" />
+    <Content Include="Shared\Ship\_Add.cshtml" />
+    <Content Include="Shared\Ship\_Edit.cshtml" />
+    <Content Include="Shared\Address\_Add.cshtml" />
+    <Content Include="Shared\Address\_Edit.cshtml" />
+    <Content Include="Shared\Contact\_Add.cshtml" />
+    <Content Include="Shared\Contact\_Edit.cshtml" />
+    <Content Include="Shared\Contact\_Display.cshtml" />
+    <Content Include="Shared\OrderDetails\_AddList.cshtml" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\msvcr90.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcese40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceqp40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceme40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceer40EN.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlcecompact40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\sqlceca40.dll" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
+    <None Include="_bin_deployableAssemblies\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
+    <Content Include="_PageStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Northwind.Data\Northwind.Data.csproj">
+      <Project>{BF03588C-56A9-478A-B26D-CEAA93B6FC3C}</Project>
+      <Name>Northwind.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Northwind.Web\Northwind.Web.csproj">
+      <Project>{373A8BD6-972C-4413-8AA5-4FBBC03C01AC}</Project>
+      <Name>Northwind.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CodeTemplates\Templates\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>55099</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:55099/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

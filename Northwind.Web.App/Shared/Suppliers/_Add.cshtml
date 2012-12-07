@@ -1,0 +1,13 @@
+<form action='@Url.ApiUrl("Suppliers")' method="post" class="form-horizontal">
+	<input id="Id" name="Id" type="hidden" data-bind="value: Id" />	
+    <div class="control-group">
+        <label class="control-label" for="Name">Name</label>
+        <div class="controls">
+			<input id="Name" name="Name" type="text" data-type="" data-bind="value: Name" />
+		</div>
+    </div>
+    <fieldset>
+        <legend>Contact</legend>
+        @RenderPage("~/Shared/Contact/_Add.cshtml")
+    </fieldset>
+</form>

@@ -1,0 +1,30 @@
+@{  
+    Page.Title = "Products";
+    Page.ApiController = "Products";
+	Page.Count = new ProductsController().Get().Count();
+}
+
+<div class="row">
+	@RenderPage("~/Shared/_Pagination.cshtml")
+    <h1>Products</h1>
+	@RenderPage("~/Shared/Products/_List.cshtml")
+</div>
+
+@section scripts {
+<script id="AddProduct" type="text/html">
+    @RenderPage("~/Shared/Products/_Add.cshtml")
+</script>
+<script id="ViewProduct" type="text/html">
+    @RenderPage("~/Shared/Products/_Display.cshtml")
+</script>
+<script id="EditProduct" type="text/html">
+    @RenderPage("~/Shared/Products/_Edit.cshtml")
+</script>
+<script id="DeleteProduct" type="text/html">
+	<div class="alert  alert-block alert-danger">
+	  <strong>Warning!</strong> You are about to delete Product: <strong data-bind="text: Id"></strong>. Are you sure?
+	</div>    
+	<form method="delete" class="form-horizontal" data-bind="attr: { action: '@Url.ApiUrl("Products")' + '/' + Id() }">
+	</form>
+</script>
+}

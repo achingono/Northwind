@@ -1,0 +1,50 @@
+    <div class="row">
+        <div class="span2"><strong>LastName</strong></div>
+        <div class="span3" data-bind="text: LastName"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>FirstName</strong></div>
+        <div class="span3" data-bind="text: FirstName"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Title</strong></div>
+        <div class="span3" data-bind="text: Title"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>BirthDate</strong></div>
+        <div class="span3" data-bind="text: BirthDate().format('mmm dd, yyyy')"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>HireDate</strong></div>
+        <div class="span3" data-bind="text: HireDate().format('mmm dd, yyyy')"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Address</strong></div>
+        <div class="span3">
+            <span data-bind="text: Address.Street"></span><br />
+            <span data-bind="text: Address.City"></span><br />
+            <span data-bind="text: Address.Region"></span>, <span data-bind="text: Address.PostalCode"></span><br />
+            <span data-bind="text: Address.Country"></span><br />
+        </div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>HomePhone</strong></div>
+        <div class="span3" data-bind="text: HomePhone"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Extension</strong></div>
+        <div class="span3" data-bind="text: Extension"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Notes</strong></div>
+        <div class="span3" data-bind="text: Notes"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Manager</strong></div>
+        <div class="span3" data-bind="text: ManagerFirstName"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Photo</strong></div>
+        <div class="span3"><img  data-bind="attr: { src: PhotoUrl, alt: FirstName }" /></div>
+    </div>
+

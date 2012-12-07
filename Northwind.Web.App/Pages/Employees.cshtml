@@ -1,0 +1,30 @@
+@{  
+    Page.Title = "Employees";
+    Page.ApiController = "Employees";
+	Page.Count = new EmployeesController().Get().Count();
+}
+
+<div class="row">
+	@RenderPage("~/Shared/_Pagination.cshtml")
+    <h1>Employees</h1>
+	@RenderPage("~/Shared/Employees/_List.cshtml")
+</div>
+
+@section scripts {
+<script id="AddEmployee" type="text/html">
+    @RenderPage("~/Shared/Employees/_Add.cshtml")
+</script>
+<script id="ViewEmployee" type="text/html">
+    @RenderPage("~/Shared/Employees/_Display.cshtml")
+</script>
+<script id="EditEmployee" type="text/html">
+    @RenderPage("~/Shared/Employees/_Edit.cshtml")
+</script>
+<script id="DeleteEmployee" type="text/html">
+	<div class="alert  alert-block alert-danger">
+	  <strong>Warning!</strong> You are about to delete Employee: <strong data-bind="text: Id"></strong>. Are you sure?
+	</div>    
+	<form method="delete" class="form-horizontal" data-bind="attr: { action: '@Url.ApiUrl("Employees")' + '/' + Id() }">
+	</form>
+</script>
+}

@@ -1,0 +1,53 @@
+<form action='@Url.ApiUrl("Orders")' method="put" class="form-horizontal" data-cookie="OrderDetails">
+	<input id="Id" name="Id" type="hidden" data-bind="value: Id" />	
+    <div class="control-group">
+        <label class="control-label" for="OrderDate">OrderDate</label>
+        <div class="controls">
+			<input id="OrderDate" name="OrderDate" type="datetime" data-type="datatype.datetime" data-bind="value: OrderDate" />
+		</div>
+    </div>
+	<input id="CustomerId" name="CustomerId" type="hidden" data-bind="value: CustomerId" />	
+    <div class="control-group">
+        <label class="control-label" for="CustomerName">Customer</label>
+        <div class="controls">
+			<input id="CustomerName" name="CustomerName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Customers")" data-target="CustomerId" data-bind="value: CustomerName" />
+		</div>
+    </div>
+	<input id="EmployeeId" name="EmployeeId" type="hidden" data-bind="value: EmployeeId" />	
+    <div class="control-group">
+        <label class="control-label" for="EmployeeFirstName">Employee</label>
+        <div class="controls">
+			<input id="EmployeeFirstName" name="EmployeeFirstName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Employees")" data-target="EmployeeId" data-bind="value: EmployeeFirstName" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="RequiredDate">RequiredDate</label>
+        <div class="controls">
+			<input id="RequiredDate" name="RequiredDate" type="datetime" data-type="datatype.datetime" data-bind="value: RequiredDate" />
+		</div>
+    </div>
+    <fieldset>
+        <legend>Shipping</legend>
+        @RenderPage("~/Shared/Ship/_Edit.cshtml")
+        <div class="control-group">
+            <label class="control-label" for="ShippedDate">ShippedDate</label>
+            <div class="controls">
+			    <input id="ShippedDate" name="ShippedDate" type="datetime" data-type="datatype.datetime" data-bind="value: ShippedDate" />
+		    </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="Freight">Freight</label>
+            <div class="controls">
+			    <input id="Freight" name="Freight" type="number" data-type="" data-bind="value: Freight" />
+		    </div>
+        </div>
+	    <input id="ShipperId" name="ShipperId" type="hidden" data-bind="value: ShipperId" />	
+        <div class="control-group">
+            <label class="control-label" for="ShipperName">Shipper</label>
+            <div class="controls">
+			    <input id="ShipperName" name="ShipperName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Shippers")" data-target="ShipperId" data-bind="value: ShipperName" />
+		    </div>
+        </div>
+    </fieldset>
+</form>
+@RenderPage("~/Shared/OrderDetails/_AddList.cshtml")

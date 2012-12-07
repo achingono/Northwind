@@ -1,0 +1,9 @@
+﻿<div class="pagination pull-right">
+	<ul>
+		<li data-bind="css: { disabled: Page.Number() <= 0 }"><a href="#" data-page="-1">«</a></li>
+		<!-- ko foreach: Page.List -->
+		<li data-bind="css: { active: $root.Page.Number() == $data }, visible: $root.Page.Show($data)"><a href="#" data-bind="attr: { 'data-page': $data }, text: $data + 1"></a></li>
+		<!-- /ko -->
+		<li data-bind="css: { disabled: Page.Number() >= Page.List().length - 1 }"><a href="#" data-page="+1">»</a></li>
+	</ul>
+</div>

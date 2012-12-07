@@ -1,0 +1,46 @@
+<form action='@Url.ApiUrl("OrderDetails")' method="put" class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="Id">Id</label>
+        <div class="controls">
+			<input id="Id" name="Id" type="text" data-type="" data-bind="value: Id" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Total">Total</label>
+        <div class="controls">
+			<input id="Total" name="Total" type="text" data-type="datatype.currency" data-bind="value: Total" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="UnitPrice">UnitPrice</label>
+        <div class="controls">
+			<input id="UnitPrice" name="UnitPrice" type="number" data-type="" data-bind="value: UnitPrice" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Quantity">Quantity</label>
+        <div class="controls">
+			<input id="Quantity" name="Quantity" type="number" data-type="" data-bind="value: Quantity" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Discount">Discount</label>
+        <div class="controls">
+			<input id="Discount" name="Discount" type="number" data-type="" data-bind="value: Discount" />
+		</div>
+    </div>
+	<input id="OrderId" name="OrderId" type="hidden" data-bind="value: OrderId" />	
+    <div class="control-group">
+        <label class="control-label" for="OrderName">Order</label>
+        <div class="controls">
+			<input id="OrderName" name="OrderName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Orders")" data-target="OrderId" data-bind="value: OrderName" />
+		</div>
+    </div>
+	<input id="ProductId" name="ProductId" type="hidden" data-bind="value: ProductId" />	
+    <div class="control-group">
+        <label class="control-label" for="ProductName">Product</label>
+        <div class="controls">
+			<input id="ProductName" name="ProductName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Products")" data-target="ProductId" data-bind="value: ProductName" />
+		</div>
+    </div>
+</form>

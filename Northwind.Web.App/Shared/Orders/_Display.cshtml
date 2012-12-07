@@ -1,0 +1,44 @@
+    <div class="row">
+        <div class="span2"><strong>Number</strong></div>
+        <div class="span3" data-bind="text: Name"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Ship To</strong></div>
+        <div class="span3">
+            <span data-bind="text: Ship.Name"></span><br />
+            <span data-bind="text: Ship.Address"></span><br />
+            <span data-bind="text: Ship.City"></span><br />
+            <span data-bind="text: Ship.Region"></span>, <span data-bind="text: Ship.PostalCode"></span><br />
+            <span data-bind="text: Ship.Country"></span><br />
+        </div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>OrderDate</strong></div>
+        <div class="span3" data-bind="text: (OrderDate() || '').format('mmm dd, yyyy')"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>RequiredDate</strong></div>
+        <div class="span3" data-bind="text: (RequiredDate() || '').format('mmm dd, yyyy')"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>ShippedDate</strong></div>
+        <div class="span3" data-bind="text: (ShippedDate() || '').format('mmm dd, yyyy')"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Freight</strong></div>
+        <div class="span3" data-bind="text: Freight"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Customer</strong></div>
+        <div class="span3" data-bind="text: CustomerName"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Employee</strong></div>
+        <div class="span3" data-bind="text: EmployeeFirstName"></div>
+    </div>
+    <div class="row">
+        <div class="span2"><strong>Shipper</strong></div>
+        <div class="span3" data-bind="text: ShipperName"></div>
+    </div>
+    <span>&nbsp;</span>
+    @RenderPage("~/Shared/OrderDetails/_List.cshtml")

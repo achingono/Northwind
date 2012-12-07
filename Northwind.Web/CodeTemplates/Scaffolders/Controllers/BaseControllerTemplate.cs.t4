@@ -1,0 +1,35 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+namespace <#= Model.Namespace #>
+{
+    using System.Collections.Specialized;
+    using System.Net.Http;
+    using System.Web.Http;
+
+     /// <summary>
+     /// TODO: Update summary
+     /// </summary>
+    public class BaseApiController : ApiController
+    {
+        /// <summary>
+        /// TODO: Update summary
+        /// </summary>
+        public <#= Model.ContextTypeName #> DbContext { get; private set; }
+
+        /// <summary>
+        /// TODO: Update summary
+        /// </summary>
+        public BaseApiController()
+        {
+            this.DbContext = new <#= Model.ContextTypeName #>();
+        }
+
+        /// <summary>
+        /// TODO: Update Summary
+        /// </summary>
+        protected NameValueCollection ParseQueryString()
+        {
+            return this.Request.RequestUri.ParseQueryString();
+        }
+    }
+}

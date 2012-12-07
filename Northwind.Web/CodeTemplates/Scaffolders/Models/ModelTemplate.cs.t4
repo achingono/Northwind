@@ -1,0 +1,169 @@
+﻿<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ import namespace="T4Scaffolding.Core.PrimaryKeyLocators" #>
+<#
+	var entityType = (EnvDTE.CodeType) Model.EntityType;
+    var properties = entityType.VisibleMembers().OfType<EnvDTE.CodeProperty>();
+#>
+namespace <#= Model.Namespace #>
+{ 
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Web;
+    using System.ComponentModel.DataAnnotations;
+
+
+	/// <summary>
+	/// The model class corresponding to a <see cref="<#= entityType.Name #>" /> entity.
+	/// </summary>
+    public partial class <#= Model.TypeName #>
+    {
+<# 
+		foreach(var property in properties) { 
+			var scaffoldColumnAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.ScaffoldColumnAttribute");
+			});
+
+			if (scaffoldColumnAttribute != null && scaffoldColumnAttribute.Arguments != null && ((CodeAttributeArgument)scaffoldColumnAttribute.Arguments.Item(1)).Value == "false")
+			{
+				continue;
+			}
+
+			var propertyName = property.Name;
+			var propertyType = property.Type;
+			var codeType = propertyType.CodeType;
+			var propertyTypeName = propertyType.AsString;
+			var isEnum = codeType.IsAssignableTo("System.Enum");
+			var dataTypeArguments = string.Empty;
+			var editableArguments = string.Empty;
+
+			var dataTypeAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.DataTypeAttribute");
+			});
+			var editableAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.EditableAttribute");
+			});
+
+			if (dataTypeAttribute != null && dataTypeAttribute.Arguments != null) {
+				dataTypeArguments = String.Join(",", dataTypeAttribute.Arguments.OfType<CodeAttributeArgument>().Select<CodeAttributeArgument, string>(delegate (CodeAttributeArgument x) {
+					return x.Value;
+				}));
+			}
+
+			if (editableAttribute != null && editableAttribute.Arguments != null) {
+				editableArguments = String.Join(",", editableAttribute.Arguments.OfType<CodeAttributeArgument>().Select<CodeAttributeArgument, string>(delegate (CodeAttributeArgument x) {
+					return x.Value;
+				}));
+			}
+
+			if (propertyTypeName.Contains('.') && !Regex.IsMatch(propertyTypeName, @"^System\.\w+\??$") && !isEnum) {			//property.Type.IsPrimitive()
+				if (Regex.IsMatch(propertyTypeName, @"[<>]")) { continue; }
+
+				var complexTypeAttribute = codeType.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+					return x.FullName.Equals("System.ComponentModel.DataAnnotations.Schema.ComplexTypeAttribute");
+				});
+
+				if (complexTypeAttribute != null) {
+#>
+		/// <summary>
+		/// No metadata information available
+		/// </summary>
+<#
+					if (!string.IsNullOrWhiteSpace(dataTypeArguments)) {
+#>
+		[DataType(<#= dataTypeArguments #>)]
+<#
+					}
+					if (!string.IsNullOrWhiteSpace(editableArguments)) {
+#>
+		[Editable(<#= editableArguments #>)]
+<#
+					}
+#>
+		public <#= propertyTypeName #> <#= propertyName #> { get; set; }
+<#
+				}
+				else {
+					var primaryKey = PrimaryKeyLocation.GetPrimaryKeys(codeType).SingleOrDefault<CodeProperty>();
+					
+					if (primaryKey != null) {
+						var keyField = string.Format("{0}{1}", propertyName, primaryKey.Name);
+						var dbsetName = propertyTypeName.Substring(propertyTypeName.LastIndexOf('.') + 1);
+
+						if (Regex.IsMatch(dbsetName, "y$")) {
+							dbsetName = Regex.Replace(dbsetName, "y$", "ies");
+						} else if (Regex.IsMatch(dbsetName, "s$")) {
+							dbsetName = Regex.Replace(dbsetName, "s$", "ses");
+						} else {
+							dbsetName = dbsetName + "s";
+						}
+#>
+		/// <summary>
+		/// No metadata information available
+		/// </summary>
+        [DataType("hidden")]
+		public <#= primaryKey.Type.AsString #> <#= keyField #> { get; set; }
+<#
+					CodeProperty displayColumnProperty = codeType.DisplayColumnProperty();
+
+					if (displayColumnProperty != null) {
+#>
+		/// <summary>
+		/// No metadata information available
+		/// </summary>
+		[DataType("typeahead")]
+        [Display(Name ="<#= propertyName #>")]
+		[UIHint("Typeahead", null, "HiddenField", "<#= keyField #>", "Controller", "<#= dbsetName #>")]
+		public <#= displayColumnProperty.Type.AsString #> <#= string.Format("{0}{1}", propertyName, displayColumnProperty.Name) #> { get; set; }
+<#
+						}
+					}
+				}
+			}
+			else if (isEnum) {
+				var enumType = (EnvDTE.CodeEnum) codeType;
+				var enumMembers = enumType.Members.OfType<CodeVariable>().Select<CodeVariable, string>(delegate (CodeVariable x) {
+					return x.Name;
+				});
+#>
+		/// <summary>
+		/// No metadata information available
+		/// </summary>
+		[DataType("typeahead")]
+        [Display(Name ="<#= propertyName #>")]
+		[UIHint("Typeahead", null, "Items", "<#= String.Join(",", enumMembers) #>")]
+		public <#= propertyTypeName #> <#= propertyName #> { get; set; }
+<#
+			}
+			else {
+#>
+		/// <summary>
+		/// No metadata information available
+		/// </summary>
+<#
+					if (!string.IsNullOrWhiteSpace(dataTypeArguments)) {
+#>
+		[DataType(<#= dataTypeArguments #>)]
+<#
+					}
+					if (!string.IsNullOrWhiteSpace(editableArguments)) {
+#>
+		[Editable(<#= editableArguments #>)]
+<#
+					}
+#>
+		public <#= propertyTypeName #> <#= propertyName #> { get; set; }
+<#
+			} 
+		} 
+#>
+	}
+}

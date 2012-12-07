@@ -1,0 +1,30 @@
+@{  
+    Page.Title = "Shippers";
+    Page.ApiController = "Shippers";
+	Page.Count = new ShippersController().Get().Count();
+}
+
+<div class="row">
+	@RenderPage("~/Shared/_Pagination.cshtml")
+    <h1>Shippers</h1>
+	@RenderPage("~/Shared/Shippers/_List.cshtml")
+</div>
+
+@section scripts {
+<script id="AddShipper" type="text/html">
+    @RenderPage("~/Shared/Shippers/_Add.cshtml")
+</script>
+<script id="ViewShipper" type="text/html">
+    @RenderPage("~/Shared/Shippers/_Display.cshtml")
+</script>
+<script id="EditShipper" type="text/html">
+    @RenderPage("~/Shared/Shippers/_Edit.cshtml")
+</script>
+<script id="DeleteShipper" type="text/html">
+	<div class="alert  alert-block alert-danger">
+	  <strong>Warning!</strong> You are about to delete Shipper: <strong data-bind="text: Id"></strong>. Are you sure?
+	</div>    
+	<form method="delete" class="form-horizontal" data-bind="attr: { action: '@Url.ApiUrl("Shippers")' + '/' + Id() }">
+	</form>
+</script>
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Data.OData.Contrib</id>
+    <version>5.1.0.51016-rc2</version>
+    <title>ODataLib Contrib</title>
+    <authors>Microsoft Corporation</authors>
+    <owners>Microsoft Corporation</owners>
+    <licenseUrl>http://odata.codeplex.com/license</licenseUrl>
+    <projectUrl>http://odata.codeplex.com/wikipage?title=ODataLib</projectUrl>
+    <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Pre-release and experimental implementations of potential future library features.
+
+No support is provided; use this to provide feedback and help shape ODataLib's future.
+
+Targets .Net 4.0.</description>
+    <tags>wcf data services odata odatalib edmlib spatial ado.net ef entity framework open protocol wcfds wcfdataservices dataservices</tags>
+    <dependencies>
+      <dependency id="Microsoft.Data.OData" version="[5.1.0-rc2]" />
+    </dependencies>
+  </metadata>
+</package>

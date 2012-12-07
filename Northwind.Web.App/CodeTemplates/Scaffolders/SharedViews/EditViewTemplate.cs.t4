@@ -1,0 +1,147 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cshtml" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<# 
+	var modelType = (EnvDTE.CodeType) Model.Type;
+	var entityType = (EnvDTE.CodeType) Model.EntityType;
+	var singularName = entityType.Name;
+	var modelProperties = modelType.VisibleMembers().OfType<EnvDTE.CodeProperty>();
+    var inputTypes = new[] { "text", "tel", "url", "email", "password", "datetime", "date", "month", "week", "time", "datetime-local", "number", "range", "color", "checkbox", "radio", "file", "submit", "image", "reset", "button", "hidden" };
+#>
+<form action='@Url.ApiUrl("<#= Model.Name #>")' method="put" class="form-horizontal">
+<#
+	foreach(var property in modelProperties)
+	{
+        var inputType = inputTypes[0];
+        var dataType = string.Empty;
+
+		CodeAttribute2 dataTypeAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+			return x.FullName.Equals("System.ComponentModel.DataAnnotations.DataTypeAttribute");
+		});
+        
+        if (dataTypeAttribute != null && dataTypeAttribute.Arguments != null) {
+            dataType = dataTypeAttribute.Arguments.OfType<CodeAttributeArgument>().First().Value.ToLowerInvariant().Replace("\"", string.Empty);
+            if (inputTypes.Contains(dataType)) {
+                inputType = dataType;
+                dataType = string.Empty;
+            }
+			else if (dataType.IndexOf("multiline") >= 0) {
+				inputType = "textarea";
+			}
+			else if (dataType.IndexOf("phone") >= 0 || dataType.IndexOf("fax") >= 0) {
+				inputType = "tel";
+			}
+			else if (inputTypes.Any(x => dataType.IndexOf(x) >= 0)) {
+				inputType = inputTypes.First(x => dataType.IndexOf(x) >= 0);
+			}
+        }
+
+		if (!property.Name.Equals(Model.PrimaryKey) && !inputType.Equals("hidden"))
+		{
+			CodeAttribute2 editableAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.EditableAttribute");
+			});
+				
+			if (editableAttribute != null && editableAttribute.Arguments != null && ((CodeAttributeArgument)editableAttribute.Arguments.Item(1)).Value == "false") {
+				continue;
+			}
+
+			string displayName = property.Name;
+
+			CodeAttribute2 displayAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.DisplayAttribute");
+			});
+
+			if (displayAttribute != null && displayAttribute.Arguments != null) 
+			{
+				var argument = displayAttribute.Arguments.OfType<CodeAttributeArgument>().FirstOrDefault<CodeAttributeArgument>(delegate (CodeAttributeArgument x) {
+					return x.Name.Equals("Name");
+				});
+
+				if (argument != null)
+				{
+					displayName = argument.Value.Replace("\"", string.Empty);
+				}
+			}
+
+			bool typeahead = false;
+			string hiddenField = null;
+			string controller = null;
+			string items = null;
+
+			CodeAttribute2 uiHintAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.UIHintAttribute");
+			});
+
+			if (uiHintAttribute != null && uiHintAttribute.Arguments != null) 
+			{
+				var arguments = uiHintAttribute.Arguments.OfType<CodeAttributeArgument>().Select<CodeAttributeArgument,string>(delegate (CodeAttributeArgument x) {
+					return x.Value.Replace("\"", string.Empty);
+				}).ToList();
+
+				if(arguments.Count() > 0 && arguments.First().Equals("Typeahead"))
+				{
+					typeahead = true;
+
+					if (arguments.Contains("HiddenField")) {
+						hiddenField = arguments[arguments.IndexOf("HiddenField") + 1];
+					}
+					if (arguments.Contains("Controller")) {
+						controller = arguments[arguments.IndexOf("Controller") + 1];
+					}
+					if (arguments.Contains("Items")) {
+						items = arguments[arguments.IndexOf("Items") + 1];
+					}
+				}
+			}
+#>
+    <div class="control-group">
+        <label class="control-label" for="<#= property.Name #>"><#= displayName #></label>
+        <div class="controls">
+<#  
+			if(inputType == "textarea") {
+#>
+			<textarea id="<#= property.Name #>" name="<#= property.Name #>"  data-bind="value: <#= property.Name #>" ></textarea>
+<# 
+			}
+			else if (typeahead) {
+				if (string.IsNullOrWhiteSpace(items)) {
+#>
+			<input id="<#= property.Name #>" name="<#= property.Name #>" type="text" data-type="<#= dataType #>" data-url="@Url.ApiUrl("<#= controller #>")" data-target="<#= hiddenField #>" data-bind="value: <#= property.Name #>" />
+<# 
+				}
+				else {
+#>
+			<input id="<#= property.Name #>" name="<#= property.Name #>" type="text" data-type="<#= dataType #>" data-items="<#= items #>" data-bind="value: <#= property.Name #>" />
+<# 
+				}
+			}
+			else if (inputType == "checkbox" || inputType == "radio") {
+#>
+			<input id="<#= property.Name #>" name="<#= property.Name #>" type="<#= inputType #>" data-type="<#= dataType #>" data-bind="checked: <#= property.Name #>" />
+<# 
+			}
+			else {
+#>
+			<input id="<#= property.Name #>" name="<#= property.Name #>" type="<#= inputType #>" data-type="<#= dataType #>" data-bind="value: <#= property.Name #>" />
+<# 
+			}
+#>
+		</div>
+    </div>
+<#
+		}
+		else
+		{
+#>
+	<input id="<#= property.Name #>" name="<#= property.Name #>" type="hidden" data-bind="value: <#= property.Name #>" />	
+<#  
+		}
+	}
+#>
+</form>

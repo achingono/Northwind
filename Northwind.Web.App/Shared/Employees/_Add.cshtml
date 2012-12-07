@@ -1,0 +1,63 @@
+<form action='@Url.ApiUrl("Employees")' method="post" class="form-horizontal">
+	<input id="Id" name="Id" type="hidden" data-bind="value: Id" />	
+    <div class="control-group">
+        <label class="control-label" for="LastName">LastName</label>
+        <div class="controls">
+			<input id="LastName" name="LastName" type="text" data-type="" data-bind="value: LastName" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="FirstName">FirstName</label>
+        <div class="controls">
+			<input id="FirstName" name="FirstName" type="text" data-type="" data-bind="value: FirstName" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Title">Title</label>
+        <div class="controls">
+			<input id="Title" name="Title" type="text" data-type="" data-bind="value: Title" />
+		</div>
+    </div>
+    <fieldset>
+        <legend>Address</legend>
+        @RenderPage("~/Shared/Address/_Add.cshtml")
+        <hr />
+    </fieldset>
+    <div class="control-group">
+        <label class="control-label" for="BirthDate">BirthDate</label>
+        <div class="controls">
+			<input id="BirthDate" name="BirthDate" type="datetime" data-type="datatype.datetime" data-bind="value: BirthDate" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="HireDate">HireDate</label>
+        <div class="controls">
+			<input id="HireDate" name="HireDate" type="datetime" data-type="datatype.datetime" data-bind="value: HireDate" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="HomePhone">HomePhone</label>
+        <div class="controls">
+			<input id="HomePhone" name="HomePhone" type="tel" data-type="datatype.phonenumber" data-bind="value: HomePhone" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Extension">Extension</label>
+        <div class="controls">
+			<input id="Extension" name="Extension" type="text" data-type="" data-bind="value: Extension" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Notes">Notes</label>
+        <div class="controls">
+			<textarea id="Notes" name="Notes"  data-bind="value: Notes" ></textarea>
+		</div>
+    </div>
+	<input id="ManagerId" name="ManagerId" type="hidden" data-bind="value: ManagerId" />	
+    <div class="control-group">
+        <label class="control-label" for="ManagerFirstName">Manager</label>
+        <div class="controls">
+			<input id="ManagerFirstName" name="ManagerFirstName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Employees")" data-target="ManagerId" data-bind="value: ManagerFirstName" />
+		</div>
+    </div>
+</form>

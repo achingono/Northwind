@@ -1,0 +1,32 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cshtml" #>
+@{  
+    Page.Title = "<#= Model.TableName #>";
+    Page.ApiController = "<#= Model.TableName #>";
+	Page.Count = new <#= Model.ControllerName #>().Get().Count();
+}
+
+<div class="row">
+	@RenderPage("~/Shared/_Pagination.cshtml")
+    <h1><#= Model.TableName #></h1>
+	@RenderPage("~/Shared/<#= Model.TableName #>/_List.cshtml")
+</div>
+
+@section scripts {
+<script id="Add<#= Model.EntityName #>" type="text/html">
+    @RenderPage("~/Shared/<#= Model.TableName #>/_Add.cshtml")
+</script>
+<script id="View<#= Model.EntityName #>" type="text/html">
+    @RenderPage("~/Shared/<#= Model.TableName #>/_Display.cshtml")
+</script>
+<script id="Edit<#= Model.EntityName #>" type="text/html">
+    @RenderPage("~/Shared/<#= Model.TableName #>/_Edit.cshtml")
+</script>
+<script id="Delete<#= Model.EntityName #>" type="text/html">
+	<div class="alert  alert-block alert-danger">
+	  <strong>Warning!</strong> You are about to delete <#= Model.EntityName #>: <strong data-bind="text: <#= Model.PrimaryKey #>"></strong>. Are you sure?
+	</div>    
+	<form method="delete" class="form-horizontal" data-bind="attr: { action: '@Url.ApiUrl("<#= Model.TableName #>")' + '/' + <#= Model.PrimaryKey #>() }">
+	</form>
+</script>
+}

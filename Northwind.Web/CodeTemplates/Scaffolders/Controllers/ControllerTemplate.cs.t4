@@ -1,0 +1,278 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ import namespace="T4Scaffolding.Core.PrimaryKeyLocators" #>
+<# 
+    var entityTypeName = ((EnvDTE.CodeType) Model.EntityType).Name; 
+    var properties = ((EnvDTE.CodeType) Model.EntityType).VisibleMembers().OfType<EnvDTE.CodeProperty>();
+#>
+namespace <#= Model.Namespace #>
+{ 
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Web.Http;
+	using <#= Model.EntityNamespace #>;
+	using <#= Model.ModelNamespace #>;
+    using <#= Model.WebEventsNamespace #>;
+
+    /// <summary>
+    /// TODO: Update summary
+    /// </summary>	
+    public partial class <#= Model.TypeName #>Controller : BaseApiController
+    {
+        /// <summary>
+        /// TODO: Update summary
+        /// </summary>
+		Func<<#= entityTypeName #>, <#= Model.ModelTypeName #>> selector = x => x.TransformTo<<#= Model.ModelTypeName #>>();
+        
+		/// <summary>
+        /// TODO: Update summary
+        /// </summary>
+        public <#= Model.TypeName #>Controller()
+		{
+		}
+
+        /// <summary>
+        /// GET /api/<#= Model.TypeName.ToLowerInvariant() #>
+        /// </summary>
+        /// <returns></returns>
+		[Queryable]
+        public IEnumerable<<#= Model.ModelTypeName #>> Get()
+        {
+			return this.DbContext.<#= Model.TypeName #>.AccessibleTo(this.User).Select(selector);
+        }
+
+        /// <summary>
+        /// GET /api/<#= Model.TypeName.ToLowerInvariant() #>/{id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public <#= Model.ModelTypeName #> Get(int id)
+        {
+            var entity = this.DbContext.<#= Model.TypeName #>.Find(id);
+
+            if (entity == null)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
+            }
+            
+            if (!entity.IsAccessibleTo(this.User)) 
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+            return selector(entity);
+        }
+
+        /// <summary>
+        /// POST /api/<#= Model.TypeName.ToLowerInvariant() #>
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public HttpResponseMessage Post(<#= Model.ModelTypeName #> model)
+        {
+			var context = this.DbContext;
+            
+            if (!this.User.CanCreate<<#= entityTypeName #>>()) 
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+
+			// transform the <#= Model.ModelTypeName #> to <#= entityTypeName #>
+			var entity = model.TransformTo<<#= entityTypeName #>>();
+<# 
+		foreach(var property in properties) { 
+			var scaffoldColumnAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.ScaffoldColumnAttribute");
+			});
+
+			if (scaffoldColumnAttribute != null && scaffoldColumnAttribute.Arguments != null && ((CodeAttributeArgument)scaffoldColumnAttribute.Arguments.Item(1)).Value == "false")
+			{
+				continue;
+			}
+
+			var propertyName = property.Name;
+			var propertyType = property.Type;
+			var codeType = propertyType.CodeType;
+			var propertyTypeName = propertyType.AsString;
+			if (propertyTypeName.Contains('.') && !Regex.IsMatch(propertyTypeName, @"^System\.\w+\??$") && !codeType.IsAssignableTo("System.Enum")) {
+				if (Regex.IsMatch(propertyTypeName, @"[<>]")) { continue; }
+
+				var complexTypeAttribute = codeType.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+					return x.FullName.Equals("System.ComponentModel.DataAnnotations.Schema.ComplexTypeAttribute");
+				});
+
+				if (complexTypeAttribute == null) {
+					var primaryKey = PrimaryKeyLocation.GetPrimaryKeys(codeType).SingleOrDefault<CodeProperty>();
+					
+					if (primaryKey != null) {
+						var keyField = string.Format("{0}{1}", propertyName, primaryKey.Name);
+						var dbsetName = propertyTypeName.Substring(propertyTypeName.LastIndexOf('.') + 1);
+
+						if (Regex.IsMatch(dbsetName, "y$")) {
+							dbsetName = Regex.Replace(dbsetName, "y$", "ies");
+						} else if (Regex.IsMatch(dbsetName, "s$")) {
+							dbsetName = Regex.Replace(dbsetName, "s$", "ses");
+						} else {
+							dbsetName = dbsetName + "s";
+						}
+
+#>
+            
+			// update <#= propertyName #> property
+            if (entity.<#= propertyName #> == null 
+                || entity.<#= propertyName #>.<#= primaryKey.Name #> != model.<#= keyField #>)
+            {
+		        entity.<#= propertyName #> = context.<#= dbsetName #>.Find(model.<#= keyField #>);
+            }
+<#
+					}
+                }
+            }
+        }
+#>		
+            // add the entity
+            context.<#= Model.TypeName #>.Add(entity);
+
+            // persist changes to the database
+            context.SaveChanges();
+            
+            // fire the web event
+            new <#= entityTypeName #>CreatedEvent(entity).Raise();
+
+			// create response
+			var response = Request.CreateResponse<<#= Model.ModelTypeName #>>(HttpStatusCode.Created, selector(entity));
+			string uri = Url.Link("Api", new { id = entity.<#= Model.PrimaryKey #> });
+			response.Headers.Location = new Uri(uri);
+            return response;
+        }
+
+        /// <summary>
+        /// PUT /api/<#= Model.TypeName.ToLowerInvariant() #>/{id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public <#= Model.ModelTypeName #> Put(int id, <#= Model.ModelTypeName #> model)
+        {
+			var context = this.DbContext;
+            var entity = context.<#= Model.TypeName #>.Find(id);
+
+            if (entity == null)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
+            }
+            
+            if (!this.User.CanUpdate(entity)) 
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+
+			// update the entity
+			entity.UpdateFrom(model);
+<# 
+		foreach(var property in properties) { 
+			var scaffoldColumnAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.ScaffoldColumnAttribute");
+			});
+
+			if (scaffoldColumnAttribute != null && scaffoldColumnAttribute.Arguments != null && ((CodeAttributeArgument)scaffoldColumnAttribute.Arguments.Item(1)).Value == "false")
+			{
+				continue;
+			}
+
+			var propertyName = property.Name;
+			var propertyType = property.Type;
+			var codeType = propertyType.CodeType;
+			var propertyTypeName = propertyType.AsString;
+			if (propertyTypeName.Contains('.') && !Regex.IsMatch(propertyTypeName, @"^System\.\w+\??$") && !codeType.IsAssignableTo("System.Enum")) {
+				if (Regex.IsMatch(propertyTypeName, @"[<>]")) { continue; }
+
+				var complexTypeAttribute = codeType.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+					return x.FullName.Equals("System.ComponentModel.DataAnnotations.Schema.ComplexTypeAttribute");
+				});
+
+				if (complexTypeAttribute == null) {
+					var primaryKey = PrimaryKeyLocation.GetPrimaryKeys(codeType).SingleOrDefault<CodeProperty>();
+					
+					if (primaryKey != null) {
+						var keyField = string.Format("{0}{1}", propertyName, primaryKey.Name);
+						var dbsetName = propertyTypeName.Substring(propertyTypeName.LastIndexOf('.') + 1);
+
+						if (Regex.IsMatch(dbsetName, "y$")) {
+							dbsetName = Regex.Replace(dbsetName, "y$", "ies");
+						} else if (Regex.IsMatch(dbsetName, "s$")) {
+							dbsetName = Regex.Replace(dbsetName, "s$", "ses");
+						} else {
+							dbsetName = dbsetName + "s";
+						}
+
+#>
+            
+			// update <#= propertyName #> property
+			if (entity.<#= propertyName #> == null 
+                || entity.<#= propertyName #>.<#= primaryKey.Name #> != model.<#= keyField #>)
+            {
+		        entity.<#= propertyName #> = context.<#= dbsetName #>.Find(model.<#= keyField #>);
+            }
+<#
+					}
+                }
+            }
+        }
+#>		
+
+            // persist changes to the database
+            context.SaveChanges();
+            
+            // fire the web event
+            new <#= entityTypeName #>UpdatedEvent(entity).Raise();
+
+            return selector(entity);
+        }
+
+        /// <summary>
+        /// DELETE /api/<#= Model.TypeName.ToLowerInvariant() #>/{id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public HttpResponseMessage Delete(int id, <#= Model.ModelTypeName #> model)
+        {
+			var context = this.DbContext;
+            var entity = context.<#= Model.TypeName #>.Find(id);
+
+            if (entity == null)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
+            }
+            
+            if (!this.User.CanDelete(entity)) 
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden));
+            }
+         
+            // create the web event
+            var webEvent = new <#= entityTypeName #>DeletedEvent(entity);
+
+			// delete the entity
+			context.<#= Model.TypeName #>.Remove(entity);
+
+            // persist changes to the database
+            context.SaveChanges();
+
+            // fire the web event
+            webEvent.Raise();
+
+			return new HttpResponseMessage(HttpStatusCode.NoContent);
+		}
+	}
+}

@@ -1,0 +1,21 @@
+<form action='@Url.ApiUrl("Categories")' method="post" class="form-horizontal">
+	<input id="Id" name="Id" type="hidden"  />	
+    <div class="control-group">
+        <label class="control-label" for="Name">Name</label>
+        <div class="controls">
+			<input id="Name" name="Name" type="text" data-type=""  />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Description">Description</label>
+        <div class="controls">
+			<textarea id="Description" name="Description"   ></textarea>
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Picture">Picture</label>
+        <div class="controls">
+			<input id="Picture" name="Picture" type="url" data-type="datatype.imageurl"  />
+		</div>
+    </div>
+</form>

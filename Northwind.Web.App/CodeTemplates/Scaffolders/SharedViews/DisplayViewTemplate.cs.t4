@@ -1,0 +1,68 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cshtml" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<# 
+	var modelType = (EnvDTE.CodeType) Model.Type;
+	var entityType = (EnvDTE.CodeType) Model.EntityType;
+	var singularName = entityType.Name;
+	var modelProperties = modelType.VisibleMembers().OfType<EnvDTE.CodeProperty>();
+
+	foreach(var property in modelProperties)
+	{
+		CodeAttribute2 dataTypeAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+			return x.FullName.Equals("System.ComponentModel.DataAnnotations.DataTypeAttribute");
+		});
+        
+        if (dataTypeAttribute != null && dataTypeAttribute.Arguments != null && dataTypeAttribute.Arguments.Count > 0) {
+            var dataType = ((CodeAttributeArgument)dataTypeAttribute.Arguments.Item(1)).Value.ToLowerInvariant().Replace("\"", string.Empty);
+            if (dataType.Equals("hidden")) {
+                continue;
+            }
+        }
+
+		if (!property.Name.Equals(Model.PrimaryKey))
+		{
+			string displayName = property.Name;
+
+			CodeAttribute2 displayAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.DisplayAttribute");
+			});
+
+			if (displayAttribute != null && displayAttribute.Arguments != null) 
+			{
+				var argument = displayAttribute.Arguments.OfType<CodeAttributeArgument>().FirstOrDefault<CodeAttributeArgument>(delegate (CodeAttributeArgument x) {
+					return x.Name.Equals("Name");
+				});
+
+				if (argument != null)
+				{
+					displayName = argument.Value.Replace("\"", string.Empty);
+				}
+			}
+#>
+    <div class="row">
+        <div class="span2"><strong><#= displayName #></strong></div>
+<# 
+		if (property.Type.AsString.Equals("System.Decimal")) 
+        {
+#>
+        <div class="span3" data-bind="text: <#= property.Name #>().toFixed(2)"></div>
+<#
+        }
+        else {
+#>
+        <div class="span3" data-bind="text: <#= property.Name #>"></div>
+<#
+        }
+#>
+    </div>
+<#
+		}
+	}
+#>
+

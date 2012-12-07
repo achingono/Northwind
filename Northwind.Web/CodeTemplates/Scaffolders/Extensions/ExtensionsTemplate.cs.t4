@@ -1,0 +1,186 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ import namespace="T4Scaffolding.Core.PrimaryKeyLocators" #>
+<#
+	var entityType = (CodeType) Model.EntityType;
+    var properties = entityType.VisibleMembers().OfType<CodeProperty2>();
+#>
+namespace <#= Model.Namespace #>
+{ 
+    using Models;
+	using <#= Model.EntityNamespace #>;
+    
+    /// <summary>
+    /// TODO: Update summary
+    /// </summary>
+    public static partial class <#= Model.ClassName #>Extensions
+    {
+        /// <summary>
+        /// Create a new instance of <see cref="<#= Model.ModelTypeName #>" /> from a <see cref="<#= Model.ClassName #>" />
+        /// </summary>
+        /// <typeparam name="T">The type of instance to create</typeparam>
+        /// <param name="source">The object to be transformed</param>
+        /// <returns></returns>
+        public static <#= Model.ModelTypeName #> TransformTo<T>(this <#= Model.ClassName #> source)
+            where T : <#= Model.ModelTypeName #>
+        {
+            // create a new <#= Model.ModelTypeName #>
+            var target = new <#= Model.ModelTypeName #>();
+
+            // update the <#= Model.ModelTypeName #> with source
+            target.UpdateFrom(source);
+
+            // return updated target
+            return target;
+        }
+		
+        /// <summary>
+        /// Create a new instance of <see cref="<#= Model.ClassName #>" /> from a <see cref="<#= Model.ModelTypeName #>" />
+        /// </summary>
+        /// <typeparam name="T">The type of instance to create</typeparam>
+        /// <param name="source">The object to be transformed</param>
+        /// <returns></returns>
+        public static <#= Model.ClassName #> TransformTo<T>(this <#= Model.ModelTypeName #> source)
+            where T : <#= Model.ClassName #>
+        {
+            // create a new <#= Model.ClassName #>
+            var target = new <#= Model.ClassName #>();
+
+            // update the <#= Model.ClassName #> with source
+            target.UpdateFrom(source);
+
+            // return updated target
+            return target;
+        }
+
+        /// <summary>
+        /// Update <see cref="<#= Model.ClassName #>" /> properties with data from <see cref="<#= Model.ModelTypeName #>" />
+        /// </summary>
+        /// <param name="target">The <see cref="<#= Model.ClassName #>" /> to be updated</param>
+        /// <param name="source">The <see cref="<#= Model.ModelTypeName #>" /> with values to be used to update</param>
+        public static void UpdateFrom(this <#= Model.ClassName #> target, <#= Model.ModelTypeName #> source)
+        {
+<# 
+		foreach(var property in properties) { 
+			
+			if (property.Name.Equals(Model.PrimaryKey)) { continue; }
+
+			if (property.ReadWrite == vsCMPropertyKind.vsCMPropertyKindReadOnly) { continue; }
+
+			var scaffoldColumnAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.ScaffoldColumnAttribute");
+			});
+
+			if (scaffoldColumnAttribute != null && scaffoldColumnAttribute.Arguments != null && ((CodeAttributeArgument)scaffoldColumnAttribute.Arguments.Item(1)).Value == "false")
+			{
+				continue;
+			}
+
+			var propertyType = property.Type;
+			var codeType = propertyType.CodeType;
+			var propertyTypeName = propertyType.AsString;
+			if (propertyTypeName.Contains('.') && !Regex.IsMatch(propertyTypeName, @"^System\.\w+\??$") && !codeType.IsAssignableTo("System.Enum")) {
+				if (Regex.IsMatch(propertyTypeName, @"[<>]")) { continue; }
+
+				var complexTypeAttribute = codeType.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+					return x.FullName.Equals("System.ComponentModel.DataAnnotations.Schema.ComplexTypeAttribute");
+				});
+
+				if (complexTypeAttribute != null) {
+#>
+            if (source.<#= property.Name #> != null)
+            {
+		        target.<#= property.Name #> = source.<#= property.Name #>;
+            }
+            else if (target.<#= property.Name #> == null)
+            {
+                target.<#= property.Name #> = new <#= propertyTypeName #>();
+            }
+<#
+				}
+			}
+			else {
+#>
+		    target.<#= property.Name #> = source.<#= property.Name #>;
+<#
+			} 
+        }
+#>
+        }
+
+        /// <summary>
+        /// Update <see cref="<#= Model.ModelTypeName #>" /> properties with data from <see cref="<#= Model.ClassName #>" />
+        /// </summary>
+        /// <param name="target">The <see cref="<#= Model.ModelTypeName #>" /> to be updated</param>
+        /// <param name="source">The <see cref="<#= Model.ClassName #>" /> with values to be used to update</param>
+        public static void UpdateFrom(this <#= Model.ModelTypeName #> target, <#= Model.ClassName #> source)
+        {
+<# 
+		foreach(var property in properties) { 
+			var scaffoldColumnAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.ScaffoldColumnAttribute");
+			});
+
+			if (scaffoldColumnAttribute != null && scaffoldColumnAttribute.Arguments != null && ((CodeAttributeArgument)scaffoldColumnAttribute.Arguments.Item(1)).Value == "false")
+			{
+				continue;
+			}
+
+			var propertyType = property.Type;
+			var codeType = propertyType.CodeType;
+			var propertyTypeName = propertyType.AsString;
+			if (propertyTypeName.Contains('.') && !Regex.IsMatch(propertyTypeName, @"^System\.\w+\??$") && !codeType.IsAssignableTo("System.Enum")) {
+				if (Regex.IsMatch(propertyTypeName, @"[<>]")) { continue; }
+
+				var complexTypeAttribute = codeType.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+					return x.FullName.Equals("System.ComponentModel.DataAnnotations.Schema.ComplexTypeAttribute");
+				});
+
+				if (complexTypeAttribute != null) {
+#>
+		    target.<#= property.Name #> = source.<#= property.Name #>;
+<#
+				}
+				else {
+					var primaryKey = PrimaryKeyLocation.GetPrimaryKeys(codeType).SingleOrDefault<CodeProperty>();
+					var displayColumnProperty = codeType.DisplayColumnProperty();
+					
+					if (primaryKey != null || displayColumnProperty != null) {
+#>
+			if (source.<#= property.Name #> != null)
+			{
+<# 
+					if (primaryKey != null) {
+#>
+				target.<#= string.Format("{0}{1}", property.Name, primaryKey.Name) #> = source.<#= property.Name #>.Id;
+<#
+					}
+
+					if (displayColumnProperty != null) {
+#>
+				target.<#= string.Format("{0}{1}", property.Name, displayColumnProperty.Name) #> = source.<#= property.Name #>.<#= displayColumnProperty.Name #>;
+<#
+					}
+#>
+			}
+<#
+					}
+				}
+			}
+			else {
+#>
+		    target.<#= property.Name #> = source.<#= property.Name #>;
+<#
+			} 
+        }
+#>
+        }
+	}
+}

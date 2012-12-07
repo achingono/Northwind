@@ -1,0 +1,14 @@
+﻿@{
+    RouteTable.Routes.Ignore("{resource}.axd/{*pathInfo}");
+    RouteTable.Routes.Ignore("favicon.ico");
+
+    RouteTable.Routes.MapHttpRoute(
+        name: "ApiAction",
+        routeTemplate: "api/{controller}/{action}/{id}"
+    );
+    RouteTable.Routes.MapHttpRoute(
+        name: "Api",
+        routeTemplate: "api/{controller}/{id}",
+        defaults: new { controller = "Default", id = RouteParameter.Optional }
+    );
+}

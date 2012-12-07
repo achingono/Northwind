@@ -1,0 +1,67 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cs" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<# 
+    var entityTypeName = ((EnvDTE.CodeType) Model.EntityType).Name; 
+    var variableName = entityTypeName.ToLowerInvariant();
+    var displayColumnName = Model.PrimaryKey;
+    CodeProperty displayColumnProperty = ((EnvDTE.CodeType) Model.EntityType).DisplayColumnProperty();
+
+    if (displayColumnProperty != null) 
+    {
+        displayColumnName = displayColumnProperty.Name;
+    }
+#>
+namespace <#= Model.Namespace #>
+{ 
+    using System.Web.Management;
+	using <#= Model.EntityNamespace #>;
+	
+	/// <summary>
+	/// Defines the ASP.NET health-monitoring event that is raised when a new <see cref="<#= entityTypeName #>"/> is created.
+	/// </summary>
+    public class <#= entityTypeName #>CreatedEvent : WebBaseEvent
+    {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="<#= entityTypeName #>CreatedEvent" /> class
+		/// </summary>
+		/// <param name="<#= variableName #>">The <see cref="<#= entityTypeName #>" /> which the event relates to</param>
+        public <#= entityTypeName #>CreatedEvent(<#= entityTypeName #> <#= variableName #>)
+            : base(string.Format("<#= entityTypeName #>: '{0}' was created.", <#= variableName #>.<#= displayColumnName #>), "<#= Model.DefaultNamespace #>", WebEventCodes.WebExtendedBase + 100)
+        { }
+    }
+
+	/// <summary>
+	/// Defines the ASP.NET health-monitoring event that is raised when a new <see cref="<#= entityTypeName #>"/> is updated.
+	/// </summary>
+    public class <#= entityTypeName #>UpdatedEvent : WebBaseEvent
+    {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="<#= entityTypeName #>UpdatedEvent" /> class
+		/// </summary>
+		/// <param name="<#= variableName #>">The <see cref="<#= entityTypeName #>" /> which the event relates to</param>
+        public <#= entityTypeName #>UpdatedEvent(<#= entityTypeName #> <#= variableName #>)
+            : base(string.Format("<#= entityTypeName #>: '{0}' was updated.", <#= variableName #>.<#= displayColumnName #>), "<#= Model.DefaultNamespace #>", WebEventCodes.WebExtendedBase + 100)
+        { }
+    }
+
+	/// <summary>
+	/// Defines the ASP.NET health-monitoring event that is raised when a new <see cref="<#= entityTypeName #>"/> is deleted.
+	/// </summary>
+    public class <#= entityTypeName #>DeletedEvent : WebBaseEvent
+    {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="<#= entityTypeName #>DeletedEvent" /> class
+		/// </summary>
+		/// <param name="<#= variableName #>">The <see cref="<#= entityTypeName #>" /> which the event relates to</param>
+        public <#= entityTypeName #>DeletedEvent(<#= entityTypeName #> <#= variableName #>)
+            : base(string.Format("<#= entityTypeName #>: '{0}' was deleted.", <#= variableName #>.<#= displayColumnName #>), "<#= Model.DefaultNamespace #>", WebEventCodes.WebExtendedBase + 100)
+        { }
+    }
+}

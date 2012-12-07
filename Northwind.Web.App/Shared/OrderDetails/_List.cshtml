@@ -1,0 +1,30 @@
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+                <th>Product</th>
+                <th>UnitPrice</th>
+                <th>Quantity</th>
+                <th>Discount</th>
+                <th>SubTotal</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: $root.OrderDetails">
+        <tr>
+            <td data-bind="text: ProductName"></td>
+            <td>$<span data-bind="text: UnitPrice().toFixed(2)"></span></td>
+            <td data-bind="text: Quantity"></td>
+            <td data-bind="text: Discount"></td>
+            <td>$<span data-bind="text: ((UnitPrice() * Quantity()) * (1 - Discount())).toFixed(2)"></span></td>
+        </tr>
+    </tbody>
+	<tfoot>
+		<tr>
+			<td colspan="4"><strong>Total</strong></td>
+			<td>
+                <strong>
+                    $<span data-bind="text: $root.OrderTotal().toFixed(2)"></span>
+                </strong>
+			</td>
+		</tr>
+	</tfoot>
+</table>

@@ -1,0 +1,125 @@
+<#@ Template Language="C#" HostSpecific="True" Inherits="DynamicTransform" #>
+<#@ Output Extension="cshtml" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<# 
+	var modelType = (EnvDTE.CodeType) Model.Type;
+	var entityType = (EnvDTE.CodeType) Model.EntityType;
+	var singularName = entityType.Name;
+	var modelProperties = modelType.VisibleMembers().OfType<EnvDTE.CodeProperty>();
+	var propertyCount = 0;
+    var excludeList = new List<string>();
+#>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+<# 
+	foreach(var property in modelProperties)
+	{
+		string displayName = property.Name;
+
+		CodeAttribute2 dataTypeAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+			return x.FullName.Equals("System.ComponentModel.DataAnnotations.DataTypeAttribute");
+		});
+        
+        if (dataTypeAttribute != null && dataTypeAttribute.Arguments != null && dataTypeAttribute.Arguments.Count > 0) {
+            var dataType = ((CodeAttributeArgument)dataTypeAttribute.Arguments.Item(1)).Value.ToLowerInvariant().Replace("\"", string.Empty);
+            if (dataType.Equals("hidden")) {
+                excludeList.Add(property.Name);
+                continue;
+            }
+        }
+
+			CodeAttribute2 displayAttribute = property.Attributes.OfType<CodeAttribute2>().FirstOrDefault<CodeAttribute2>(delegate (CodeAttribute2 x) {
+				return x.FullName.Equals("System.ComponentModel.DataAnnotations.DisplayAttribute");
+			});
+
+			if (displayAttribute != null && displayAttribute.Arguments != null) 
+			{
+				var argument = displayAttribute.Arguments.OfType<CodeAttributeArgument>().FirstOrDefault<CodeAttributeArgument>(delegate (CodeAttributeArgument x) {
+					return x.Name.Equals("Name");
+				});
+
+				if (argument != null)
+				{
+					displayName = argument.Value.Replace("\"", string.Empty);
+				}
+			}
+#>
+                <th><#= displayName #></th>
+<# 
+		propertyCount++;
+	}
+#>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: <#= Model.Name #>">
+        <tr>
+<# 
+	foreach(var property in modelProperties)
+	{
+        if (excludeList.Contains(property.Name)) {
+            continue;
+        }                                 
+		if (property.Type.AsString.Equals("System.Decimal")) 
+		{
+#>
+            <td data-bind="text: '$' + <#= property.Name #>().toFixed(2)" class="tr"></td>
+<# 
+		}
+		else 
+		{
+			var displayColumnName = property.Name;
+			var displayColumnProperty = property.Type.CodeType.DisplayColumnProperty();
+			if (displayColumnProperty != null && !string.IsNullOrWhiteSpace(displayColumnProperty.Name)) 
+			{
+				displayColumnName = string.Format("{0}.{1}", property.Name, displayColumnProperty.Name);
+			}
+#>
+            <td data-bind="text: <#= displayColumnName #>"></td>
+<# 
+		}
+	}
+#>
+            <td class="nowrap">
+                <a class="btn" 
+					title="View <#= singularName #>"
+                    data-template="View<#= singularName #>" 
+                    data-bind="attr: { 'data-id': <#= Model.PrimaryKey #>(), href: '#!/' + <#= Model.PrimaryKey #>() }"
+                    data-toggle="modal"
+                    data-target="#modal"><i class="icon-eye-open"></i></a>
+                <a class="btn btn-primary" 
+					title="Edit <#= singularName #>"
+                    data-template="Edit<#= singularName #>" 
+                    data-bind="attr: { 'data-id': <#= Model.PrimaryKey #>(), href: '#!/Edit/' + <#= Model.PrimaryKey #>() }"
+                    data-toggle="modal"
+                    data-target="#modal"><i class="icon-edit icon-white"></i></a>
+                <a class="btn btn-danger" 
+					title="Delete <#= singularName #>"
+                    data-template="Delete<#= singularName #>" 
+                    data-bind="attr: { 'data-id': <#= Model.PrimaryKey #>(), href: '#!/Delete/' + <#= Model.PrimaryKey #>() }"
+                    data-toggle="modal"
+                    data-target="#modal"><i class="icon-trash icon-white"></i></a>
+            </td>
+        </tr>
+    </tbody>
+	<tfoot>
+		<tr>
+			<td colspan="<#= propertyCount #>"></td>
+			<td>
+				<a class="btn" 
+					href="#!/Add"
+					title="Add <#= singularName #>"
+					data-template="Add<#= singularName #>" 
+					data-toggle="modal"
+					data-target="#modal"
+					data-item="@Json.Encode(new <#= modelType.Name #>())"><i class="icon-plus"></i> Add <#= singularName #></a>
+			</td>
+		</tr>
+	</tfoot>
+</table>

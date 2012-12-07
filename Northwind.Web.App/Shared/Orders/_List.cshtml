@@ -1,0 +1,65 @@
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+                <th>Id</th>
+                <th>Customer</th>
+                <th>Employee</th>
+                <th>Ship To</th>
+                <th>OrderDate</th>
+                <th>RequiredDate</th>
+                <th>ShippedDate</th>
+                <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: Orders">
+        <tr>
+            <td data-bind="text: Id"></td>
+            <td data-bind="text: CustomerName"></td>
+            <td data-bind="text: EmployeeFirstName"></td>
+            <td data-bind="text: Ship.Name"></td>
+            <td data-bind="text: (OrderDate() || '').format('mmm dd, yyyy')"></td>
+            <td data-bind="text: (RequiredDate() || '').format('mmm dd, yyyy')"></td>
+            <td data-bind="text: (ShippedDate() || '').format('mmm dd, yyyy')"></td>
+            <td>$<span data-bind="text: Total().toFixed(2)"></span></td>
+            <td class="nowrap">
+                <a class="btn" 
+					title="View Order"
+                    data-template="ViewOrder" 
+                    data-bind="attr: { 'data-id': Id(), href: '#!/' + Id() }"
+                    data-toggle="modal"
+                    data-target="#modal"
+                    data-url="@Url.ApiUrl("OrderDetails","Order",0)" 
+                    data-controller="OrderDetails"><i class="icon-eye-open"></i></a>
+                <a class="btn btn-primary" 
+					title="Edit Order"
+                    data-template="EditOrder" 
+                    data-bind="attr: { 'data-id': Id(), href: '#!/Edit/' + Id() }"
+                    data-toggle="modal"
+                    data-target="#modal"
+                    data-url="@Url.ApiUrl("OrderDetails","Order",0)" 
+                    data-controller="OrderDetails"><i class="icon-edit icon-white"></i></a>
+                <a class="btn btn-danger" 
+					title="Delete Order"
+                    data-template="DeleteOrder" 
+                    data-bind="attr: { 'data-id': Id(), href: '#!/Delete/' + Id() }"
+                    data-toggle="modal"
+                    data-target="#modal"><i class="icon-trash icon-white"></i></a>
+            </td>
+        </tr>
+    </tbody>
+	<tfoot>
+		<tr>
+			<td colspan="8"></td>
+			<td>
+				<a class="btn" 
+					href="#!/Add"
+					title="Add Order"
+					data-template="AddOrder" 
+					data-toggle="modal"
+					data-target="#modal"
+					data-item="@Json.Encode(new OrderModel())"><i class="icon-plus"></i> Add Order</a>
+			</td>
+		</tr>
+	</tfoot>
+</table>

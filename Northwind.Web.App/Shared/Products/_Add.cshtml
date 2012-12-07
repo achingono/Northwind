@@ -1,0 +1,65 @@
+<form action='@Url.ApiUrl("Products")' method="post" class="form-horizontal">
+	<input id="Id" name="Id" type="hidden" data-bind="value: Id" />	
+    <div class="control-group">
+        <label class="control-label" for="Name">Name</label>
+        <div class="controls">
+			<input id="Name" name="Name" type="text" data-type="" data-bind="value: Name" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="EnglishName">EnglishName</label>
+        <div class="controls">
+			<input id="EnglishName" name="EnglishName" type="text" data-type="" data-bind="value: EnglishName" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="QuantityPerUnit">QuantityPerUnit</label>
+        <div class="controls">
+			<input id="QuantityPerUnit" name="QuantityPerUnit" type="text" data-type="" data-bind="value: QuantityPerUnit" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="UnitPrice">UnitPrice</label>
+        <div class="controls">
+			<input id="UnitPrice" name="UnitPrice" type="number" data-type="" data-bind="value: UnitPrice" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="UnitsInStock">UnitsInStock</label>
+        <div class="controls">
+			<input id="UnitsInStock" name="UnitsInStock" type="number" data-type="" data-bind="value: UnitsInStock" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="UnitsOnOrder">UnitsOnOrder</label>
+        <div class="controls">
+			<input id="UnitsOnOrder" name="UnitsOnOrder" type="number" data-type="" data-bind="value: UnitsOnOrder" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="ReorderLevel">ReorderLevel</label>
+        <div class="controls">
+			<input id="ReorderLevel" name="ReorderLevel" type="number" data-type="" data-bind="value: ReorderLevel" />
+		</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="Discontinued">Discontinued</label>
+        <div class="controls">
+			<input id="Discontinued" name="Discontinued" type="checkbox" data-type="" data-bind="checked: Discontinued" />
+		</div>
+    </div>
+	<input id="SupplierId" name="SupplierId" type="hidden" data-bind="value: SupplierId" />	
+    <div class="control-group">
+        <label class="control-label" for="SupplierName">Supplier</label>
+        <div class="controls">
+			<input id="SupplierName" name="SupplierName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Suppliers")" data-target="SupplierId" data-bind="value: SupplierName" />
+		</div>
+    </div>
+	<input id="CategoryId" name="CategoryId" type="hidden" data-bind="value: CategoryId" />	
+    <div class="control-group">
+        <label class="control-label" for="CategoryName">Category</label>
+        <div class="controls">
+			<input id="CategoryName" name="CategoryName" type="text" data-type="typeahead" data-url="@Url.ApiUrl("Categories")" data-target="CategoryId" data-bind="value: CategoryName" />
+		</div>
+    </div>
+</form>

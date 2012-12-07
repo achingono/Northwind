@@ -1,0 +1,56 @@
+﻿    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="/">Northwind</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="~/Pages/Employees">Employees</a></li>
+                        <li><a href="~/Pages/Customers">Customers</a></li>
+                        <li><a href="~/Pages/Suppliers">Suppliers</a></li>
+                        <li><a href="~/Pages/Products">Products</a></li>
+                        <li><a href="~/Pages/Orders">Orders</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li class="divider-vertical"></li>
+                        @if (User.IsAuthenticated())
+                        {
+                            <li class="dropdown">
+                                <a href="#"
+                                   class="dropdown-toggle"
+                                   data-toggle="dropdown">
+                                    @User.Name()
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/Account/Profile">Profile</a></li>
+                                    <li><a href="/Account/Options">Options</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="/Logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        { 
+                            <li class="dropdown">
+                                <a id="login-button"
+                                   class="dropdown-toggle"
+                                   href="#"
+                                   title="Login"
+                                   data-editor-url="/Login"
+                                   data-editor-position="bottom"
+                                   data-editor-align="right">
+                                    Login <b class="caret"></b>
+                                </a>
+                            </li>
+                        }                    
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
