@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Northwind")]
 [assembly: AssemblyProduct("Northwind.Web.App")]
 [assembly: AssemblyCopyright("Copyright © Alfero Chingono 2012")]
-[assembly: AssemblyTrademark("@ahingono")]
+[assembly: AssemblyTrademark("@achingono")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
