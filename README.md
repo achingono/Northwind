@@ -54,3 +54,11 @@ This Project Sucks?
 
 Probably so, but all comments are welcome. I had no real incentive to demonstrate any other technology besides the ones listed above.
 I'm pretty sure this can be improved (especially the scaffolding code - it's super ugly, I know).
+
+Roadmap/Ideas
+=============
+
+* Polish up application functionality
+* Polish up scaffolders
+* Contribute extensions to the T4 Scaffolding core
+* Create a new WebPages/Knockout Scaffolding nuget package (help?) for scaffolding plain razor pages with Knockout bindings
