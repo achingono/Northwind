@@ -13,7 +13,7 @@
 	var modelProperties = modelType.VisibleMembers().OfType<EnvDTE.CodeProperty>();
     var inputTypes = new[] { "text", "tel", "url", "email", "password", "datetime", "date", "month", "week", "time", "datetime-local", "number", "range", "color", "checkbox", "radio", "file", "submit", "image", "reset", "button", "hidden" };
 #>
-<form action='@Url.ApiUrl("<#= Model.Name #>")' method="put" class="form-horizontal">
+<form method="put" class="form-horizontal" data-bind="attr: { action: '@Url.ApiUrl("<#= Model.Name #>")' + '/' + <#= Model.PrimaryKey #>() }">
 <#
 	foreach(var property in modelProperties)
 	{

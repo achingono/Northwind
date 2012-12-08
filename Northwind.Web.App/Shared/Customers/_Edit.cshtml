@@ -1,4 +1,4 @@
-<form action='@Url.ApiUrl("Customers")' method="put" class="form-horizontal">
+<form method="put" class="form-horizontal" data-bind="attr: { action: '@Url.ApiUrl("Customers")' + '/' + Id() }">
 	<input id="Id" name="Id" type="hidden" data-bind="value: Id" />	
     <div class="control-group">
         <label class="control-label" for="Name">Name</label>

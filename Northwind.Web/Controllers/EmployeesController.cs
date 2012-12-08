@@ -24,9 +24,8 @@
             }
 
             var result = new HttpResponseMessage(HttpStatusCode.OK);
-            var stream = new MemoryStream(entity.Photo);
-            result.Content = new StreamContent(stream);
-            result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+            result.Content = new StreamContent(new MemoryStream(entity.Photo));
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/gif");
             return result;
         }
     }

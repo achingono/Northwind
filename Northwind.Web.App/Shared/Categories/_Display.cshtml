@@ -8,6 +8,8 @@
     </div>
     <div class="row">
         <div class="span2"><strong>Picture</strong></div>
-        <div class="span3" data-bind="text: Picture"></div>
+        <div>
+            <img  class="span3" data-bind="attr: { src: 'data:image/gif;base64,' + Picture() }" />
+        </div>
     </div>
 
