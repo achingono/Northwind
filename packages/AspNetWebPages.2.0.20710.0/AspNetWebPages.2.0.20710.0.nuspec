@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>AspNetWebPages</id>
+    <version>2.0.20710.0</version>
+    <title>ASP.NET Web Pages 2</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://www.microsoft.com/web/webpi/eula/WebPages_2_eula_ENU.htm</licenseUrl>
+    <projectUrl>http://www.asp.net/web-pages</projectUrl>
+    <iconUrl>https://download-codeplex.sec.s-msft.com/Download?ProjectName=aspnetwebstack&amp;DownloadId=360555</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Legacy package, AspNetWebPages is now included in the 'Microsoft.AspNet.WebPages.Administration' package.</description>
+    <summary>Legacy package, AspNetWebPages is now included in the 'Microsoft.AspNet.WebPages.Administration' package.</summary>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.WebPages.Administration" version="[2.0.20710.0, 2.1)" />
+    </dependencies>
+  </metadata>
+</package>

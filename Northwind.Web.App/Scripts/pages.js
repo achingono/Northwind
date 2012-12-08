@@ -366,10 +366,6 @@ $(function () {
         var url = form.attr('action');
         var cookieName = form.data('cookie');
 
-        if (!viewModel.Selected.Template().startsWith('Add')) {
-            url += '/' + viewModel.Selected.Item().Id();
-        }
-
         // if a cookie name is provided
         // then store the viewModel property in a cookie before submitting
         if (cookieName && cookieName != '') {
