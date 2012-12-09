@@ -56,7 +56,12 @@ viewModel.Page.Number.subscribe(function (newValue) {
     }
 
     if (sort && sort != '') {
-        apiUrl += '&$orderby=' + sort;
+        if (apiUrl.indexOf('?') >= 0) {
+            apiUrl += '&$orderby=' + sort;
+        }
+        else {
+            apiUrl += '?$orderby=' + sort;
+        }
     }
 
     // make the call
