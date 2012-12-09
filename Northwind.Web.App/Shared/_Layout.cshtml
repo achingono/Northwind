@@ -16,7 +16,12 @@
 	<script type="text/javascript" src="~/Scripts/modernizr-2.6.2.js"></script>
 	@RenderSection("head", required:false)
 </head>
-<body class='@Page.ApiController' data-controller='@Page.ApiController' data-url='@Url.ApiUrl(Page.ApiController)' data-page-size="@Page.PageSize" data-count="@Page.Count">
+<body class='@Page.ApiController' 
+      data-controller='@Page.ApiController' 
+      data-url='@Url.ApiUrl(Page.ApiController)' 
+      data-page-size="@Page.PageSize" 
+      data-count="@Page.Count"
+      data-sort="@Page.Sort">
 	<!--[if lt IE 7]>
 	<p class=chromeframe>
 		Your browser is <em>ancient!</em> 

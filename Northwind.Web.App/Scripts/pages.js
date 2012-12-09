@@ -42,14 +42,21 @@ viewModel.Page.Number.subscribe(function (newValue) {
     var controller = body.data('controller');
     // retrieve the value of the "data-url" attribute
     var apiUrl = body.data('url');
-    var pageNumber = newValue; //viewModel.Page.Number();
+    // retrieve the value of the "data-sort" attribute
+    var sort = body.data('sort');
+
+    var pageNumber = newValue;
     var pageSize = viewModel.Page.Size();
 
     if (pageNumber > 0 && pageSize > 0) {
-        apiUrl += '?$skip=' + (pageNumber * pageSize) + '&$top=' + pageSize + '&$orderby=Id desc';
+        apiUrl += '?$skip=' + (pageNumber * pageSize) + '&$top=' + pageSize;
     }
     else if (pageSize > 0) {
-        apiUrl += '?$top=' + pageSize + '&$orderby=Id desc';
+        apiUrl += '?$top=' + pageSize;
+    }
+
+    if (sort && sort != '') {
+        apiUrl += '&$orderby=' + sort;
     }
 
     // make the call
