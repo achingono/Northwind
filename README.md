@@ -59,8 +59,8 @@ Getting Started
 
 Just open the project in Visual Studio and run.
 
-This Project Sucks?
-===================
+This project is terrible?
+=========================
 
 Probably so, but all comments are welcome. I had no real incentive to demonstrate any other technology besides the ones listed above.
 I know I don't have any tests in this project, but that wasn't the point. Feel free to add if you're so inclined.
